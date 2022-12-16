@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kgezgin <kgezgin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/30 12:54:08 by kgezgin           #+#    #+#             */
-/*   Updated: 2022/12/16 17:15:14 by kgezgin          ###   ########.fr       */
+/*   Created: 2022/12/15 15:17:06 by kgezgin           #+#    #+#             */
+/*   Updated: 2022/12/16 17:15:51 by kgezgin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -83,7 +83,7 @@ char	*ft_write(long len, char *temp, char *gnl, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	*gnl;
+	static char	*gnl[1024];
 	char		*temp;
 	char		*res;
 	long		len;
@@ -94,14 +94,14 @@ char	*get_next_line(int fd)
 	if (!temp)
 		return (NULL);
 	len = 1;
-	while (len && !ft_strchr(gnl, '\n'))
+	while (len && !ft_strchr(gnl[fd], '\n'))
 	{
-		gnl = ft_write(len, temp, gnl, fd);
-		if (!gnl || BUFFER_SIZE > (int)ft_strlen(temp))
+		gnl[fd] = ft_write(len, temp, gnl[fd], fd);
+		if (!gnl[fd] || BUFFER_SIZE > (int)ft_strlen(temp))
 			break ;
 	}
-	res = ft_res(gnl);
-	gnl = ft_delete(gnl);
+	res = ft_res(gnl[fd]);
+	gnl[fd] = ft_delete(gnl[fd]);
 	if (temp)
 		free(temp);
 	return (res);
